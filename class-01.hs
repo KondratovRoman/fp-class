@@ -1,6 +1,7 @@
 -- IT314. Функциональное программирование
 -- Занятие 1
 
+
 -- 1) Функция без параметров (= константа)
 
 hello :: String -- типовая аннотация (сигнатура)
@@ -46,7 +47,8 @@ avg a b = (a + b)/2
 -}
 
 avg3 :: Double -> Double -> Double -> Double
-avg3 a b c = undefined
+avg3 a b c = (a + b + c)/3
+
 
 {-
    После определения функции avg3 этот файл следует перезагрузить. Для этого в ghci необходимо выполнить
@@ -65,20 +67,19 @@ avg3 a b c = undefined
    обращая внимание на обозначения и приоритеты операций, стандартные функции,
    расстановку скобок:
 
-    2 + 3
-    mod 10 4
-    10 `mod` 4
-    True && 5 < 10
-    5 < 7 || 10 > 3
-    sqrt (-2)
-    sqrt (sqrt 16)
+    2 + 3 ==> 5
+    mod 10 4 ==> 2
+    10 `mod` 4 ==> 2
+    True && 5 < 10 ==> True
+    5 < 7 || 10 > 3 ==> True
+    sqrt (-2) ==> NaN
+    sqrt (sqrt 16) ==> 2.0
     let x = 4 in (sin x)^2 + (cos x)^2
     x
-    7^(-1)
+    7^(-1) ==> *** Exception: Negative exponent
     error "AAAA!!!!"
-    12345^54321
-    2 < 3 || 9999954321^99912345 > 12345^54321
-
+    12345^54321 ==> много
+    2 < 3 || 9999954321^99912345 > 12345^54321 ==> True
 -}
 
 -- 4) Типы
@@ -95,14 +96,14 @@ avg3 a b c = undefined
   классу типов Num (имеет экземпляр класса типов Num, является числовым типом).
 
   Определите и сохраните в этом файле типы следующих выражений:
-   5
-   5.0
-   sqrt 4
-   sqrt 4.0
-   2+3
-   5 < 7
-   if 2 > 3 then 7 else 5
-   5 > 6 && False
+   5 ==> it :: Integer
+   5.0 ==> it :: Double
+   sqrt 4 ==> it :: Double
+   sqrt 4.0 ==> it :: Double
+   2+3 ==> it :: Integer
+   5 < 7 ==> it :: Bool
+   if 2 > 3 then 7 else 5 ==> it :: Integer
+   5 > 6 && False ==> it :: Bool
 
    Команда ":set +t" включает режим, при котором печатается тип каждого вычисляемого выражения.
    Команда ":set +s" включает режим, при котором печатается время вычисления каждого выражения.
@@ -115,17 +116,16 @@ avg3 a b c = undefined
 -- (типовая аннотация здесь означает, что функция принимает один параметр типа a и возвращает значение
 --  типа a, причём тип a принадлежит классу типов Num)
 double :: Num a => a -> a
-double a = undefined
+double a = 2*a
 
 -- б) Утроение заданного числа
 --    (типовую аннотацию и образцы параметров следует написать самостоятельно)
-triple = undefined
+triple a = 3*a
 
 -- в) Определение наибольшего из трёх заданных целых чисел (можно воспользоваться стандартной
 --    двухаргументной функцией max).
 max3 :: Ord a => a -> a -> a -> a
-max3 = undefined
-
+max3 a b c = max (max a b) c
 {-
   Проверка:
 > max3 87 34 209
@@ -141,19 +141,21 @@ max3 = undefined
 -- (пользоваться стандартными логическими операциями не следует, обратите внимание на
 --  образцы параметров функции, последняя строка -- "во всех остальных случаях").
 bothTrue :: Bool -> Bool -> Bool
-bothTrue True True = undefined
-bothTrue _  _ = undefined
+bothTrue True True = True
+bothTrue _  _ = False
 
 
 -- д) Функция, возвращающая True, если только один из её аргументов равен True,
 -- и False в противном случае (пользоваться стандартными логическими операциями не следует).
 oneTrue :: Bool -> Bool -> Bool
-oneTrue = undefined
+oneTrue True False = True
+oneTrue False True = True
+oneTrue _ _ = False
 
 -- е) Дана температура в градусах Фаренгейта. Вычислить соответствующую температуру
 -- в градусах Цельсия.
 f2c :: Double -> Double
-f2c = undefined
+f2c a = (a-32)*5/9
 
 {-
    ж) Найти наибольший общий делитель двух целых чисел, пользуясь
@@ -161,14 +163,23 @@ f2c = undefined
       НОД(a, 0) = a.
       НОД(a, b) = НОД(b, a mod b), если b ≠ 0; 
 -}
--- gcd' :: ???
-gcd' = undefined
-
+-- gcd :: ???
+--gcd :: Num a => a -> a -> a
+gcd' :: Integer -> Integer -> Integer
+gcd' a 0 = a
+gcd' a b = gcd b (mod a b)
 -- з) Функция, возвращающая название дня недели по его номеру (от 1 до 7),
 --    если номер неправильный, генерируется исключение (функция error).
 --    В реализации следует пользоваться сопоставлением с образцами.
 dayOfWeek :: Int -> String
-dayOfWeek = undefined
+dayOfWeek 1 = "Monday"
+dayOfWeek 2 = "Tuesday"
+dayOfWeek 3 = "Wednesday"
+dayOfWeek 4 = "Thursday"
+dayOfWeek 5 = "Friday"
+dayOfWeek 6 = "Satuday"
+dayOfWeek 7 = "Sunday"
+dayOfWeek _ = error "AAAA!!!!"
 
 
 -- Далее типовые аннотации, если их нет, следует писать самостоятельно.
@@ -182,7 +193,6 @@ sign a
    | a < 0 = -1
    | a == 0 = 0
    | otherwise = 1
-
 {-
    а) Найти значение функции f(x), вычисляемое по правилу:
           −x,   если x ≤ 0,
@@ -190,12 +200,21 @@ sign a
           4,    если x ≥ 2.
 -}
 
-eval_f = undefined
+eval_f :: (Num a, Ord a) => a -> a
+eval_f a
+   | a < 0 = (-a)
+   | (a>0) && (a<2) = (a^2)
+   | otherwise = 4
+   
 
 -- б) Написать функцию, возвращающую текстовую характеристику ("hot", "warm", "cool", "cold")
 -- по заданному значению температуры в градусах Цельсия.
 describeTemperature :: Double -> String
-describeTemperature = undefined
+describeTemperature a
+   | a < 0 = "Cold"
+   | (a >= 0) && (a <= 10) = "Cool"
+   | (a>10) && (a < 25) = "Warm"
+   | otherwise = "Hot"
 
 {- 
    в) (*) Дан список температур в градусах Фаренгейта. Вывести для каждого значения
@@ -217,32 +236,61 @@ sum_n n
   | otherwise = error "n should be >= 1"
 
 -- а) Вычислить сумму всех целых чисел от a до b включительно.
-sum_ab = undefined
+sum_ab a b 
+    | a == b = a
+    | a < b = a + sum_ab (a+1) b
+    | otherwise = error "xxx"
 
 {-
    б) Числовая последовательность определяется следующим образом:
       a1 = 1, a2 = 2, a3 = 3, a_k = a_{k−1} + a_{k−2} − 2*a_{k−3}, k = 4, 5, ...
       Вычислить её n-й элемент.
 -}
-eval_a_n = undefined
+eval_a_n n 
+  | n == 1 = 1
+  | n == 2 = 2
+  | n == 3 = 3
+  | n > 3 = (eval_a_n n-1 + eval_a_n n-2 - 2*eval_a_n n-3)
+  | otherwise = error "xxx"
 
 -- в) Вычислить, пользуясь рекурсией, n-ю степень числа a (n - целое):
-pow = undefined
-
+pow a n 
+  | n == 0 = 1
+  | n > 0 = iter a n 1
+  | n < 0 = pow  (1/a) (-n)
+  where 
+    iter a i 
+      | i==n = a*a
+      | i<n = iter  (a*a) (i+1)
 -- г) Пользуясь ранее написанной функцией pow, вычислить сумму: 1^k + 2^k + ... + n^k.
-sum_nk = undefined
-
+sum_nk 1 _ = 1
+sum_nk n k 
+  | n > 1 = (pow (n) (k) + sum_nk (n-1) (k))  
+  | otherwise = error "xxx"
 -- д) Сумма факториалов чисел от 1 до n.
 sum_fact 1 = 1
-sum_fact n = undefined
+sum_fact n
+  | n == 1 = 1
+  | n > 1 = fact n + sum_fact (n-1)
   where
-    fact n = undefined
+    fact n
+      | n == 1 = 1
+      | n > 1 = n * (n-1)
 
 -- е) Количество цифр целого числа
-number_digits = undefined
+number_digits n
+  | n < 0 = number_digits (-n)
+  | n < 10 = 1
+  | n >= 10 = 1 + number_digits (mod n 10)
 
 -- ж) Проверить, является ли заданное число простым.
-isPrime = undefined
+isPrime n 
+  | n < 0  = isPrime (-n)
+  | n == 0 = error "Exception"
+  | n <= 3 = True
+  | n > 3 = iter 2
+  where 
+    iter = undefined
 
 -- 8) Разное
 
